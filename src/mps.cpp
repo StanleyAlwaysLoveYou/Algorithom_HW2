@@ -3,6 +3,7 @@
 #include <map>
 using namespace std;
 
+map<int,int> result = {};
 class node
 {
     public:
@@ -12,7 +13,7 @@ class node
         int j = 0;
         int k = 0;
 };
-void generate_result(int i,int k,int j,map<int,int> chord);
+void generate_result(int i,int j,node** MIS);
 int main(int argc,char* argv[])
 {
     if(argc != 3)   return 0;
@@ -52,7 +53,7 @@ int main(int argc,char* argv[])
     node** MIS = new node*[number];
     for(int i=0;i<number;i++)
     {
-        cout<<"check "<<i<<endl;
+        // cout<<"check "<<i<<endl;
         MIS[i] = new node[number];
     }
     for(int i=0;i<number;i++)
@@ -101,9 +102,7 @@ int main(int argc,char* argv[])
         }
     }
     
-    map<int,int> result = {};
-    int temp_k = chords.find(number)->second;
-    generate_result(0,number,temp_k,result,MIS);
+    generate_result(0,number-1,MIS);
 
     fstream output_file;
     output_file.open(outputfile,ios::out);
@@ -111,6 +110,12 @@ int main(int argc,char* argv[])
     // cout<<"create file:"<<outputfile<<endl;
     output_file<<MIS[0][number-1].value<<" \n";
     map<int,int> mps = result;
+    // cout<<"after resulting..........."<<endl;
+    // for(map<int,int>::iterator i=result.begin();i!=result.end();i++)
+    // {
+    //     cout<<i->first<<" "<<i->second<<endl;
+    // }
+    // cout<<"-----------------------"<<endl;
     for(map<int,int>::iterator i=mps.begin();i!=mps.end();i++)
     {
         output_file<<i->first<<" "<<i->second<<endl;
@@ -119,23 +124,31 @@ int main(int argc,char* argv[])
     input_file.close();
     return 0;
 }
-void generate_result(int i,int j,int k,map<int,int> chord,node** MIS)
+void generate_result(int i,int j,node** MIS)
 {
-    int temp_k =MIS[i][j].k;
-    if(k<j and k>i)
+    int k =MIS[i][j].k;
+    // cout<<i<<" "<<j<<" "<<k<<endl;
+    // for(map<int,int>::iterator i=result.begin();i!=result.end();i++)
+    // {
+    //     cout<<i->first<<" "<<i->second<<endl;
+    // }
+    // cout<<"-----------------------"<<endl;
+    if(i<j)
     {
-        generate_result(i,k-1,temp_k,chord,MIS);
-        generate_result(k+1,j-1,temp_k,chord,MIS);
-        chord.insert(pair<int,int>(k,j));
+        if(k<j and k>i)
+        {
+            result.insert(pair<int,int>(k,j));
+            generate_result(i,k-1,MIS);
+            generate_result(k+1,j-1,MIS);
+        }
+        else if(k == i)
+        {
+            result.insert(pair<int,int>(i,j));
+            generate_result(i+1,j-1,MIS);
+        }
+        else
+        {
+            generate_result(i,j-1,MIS);
+        }
     }
-    if(k == i)
-    {
-        generate_result(i+1,j-1,temp_k,chord,MIS);
-        chord.insert(pair<int,int>(i,j));
-    }
-    else
-    {
-        generate_result(i,j-1,temp_k,chord,MIS);
-    }
-    
 }
