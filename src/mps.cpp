@@ -36,6 +36,7 @@ int main(int argc,char* argv[])
         chords.insert(pair<int,int>(x,y));
         chords.insert(pair<int,int>(y,x));
     }
+    // cout<<"complete insert"<<endl;
     map<int,int>::iterator it;
     it = chords.begin();
     for(map<int,int>::iterator i=chords.begin();i!=chords.end();i++)
@@ -47,6 +48,7 @@ int main(int argc,char* argv[])
     node** MIS = new node*[number];
     for(int i=0;i<number;i++)
     {
+        // cout<<"check "<<i<<endl;
         MIS[i] = new node[number];
     }
 
