@@ -11,8 +11,6 @@ class node
 {
     public:
         int value = 0;
-        int i = 0;
-        int j = 0;
         int k = 0;
         bool excep = false;
 };
@@ -49,7 +47,7 @@ int main(int argc,char* argv[])
         chords.insert(pair<int,int>(x,y));
         chords.insert(pair<int,int>(y,x));
     }
-    // cout<<"complete insert"<<endl;
+    // cout<<"complete creating chord map"<<endl;
     map<int,int>::iterator it;
     it = chords.begin();
     // for(map<int,int>::iterator i=chords.begin();i!=chords.end();i++)    cout<<i->first<<" "<<i->second<<endl;
@@ -61,15 +59,7 @@ int main(int argc,char* argv[])
         // cout<<"check "<<i<<endl;
         MIS[i] = new node[number];
     }
-    for(int i=0;i<number;i++)
-    {
-        for(int j=i;j<number;j++)
-        {
-            MIS[i][j].i = i;
-            MIS[i][j].j = j;
-        }
-    }
-    cout<<"complete creating table......"<<endl;
+    // cout<<"complete creating table......"<<endl;
 
     for(int l=1;l<number;l++)
     {
@@ -84,13 +74,15 @@ int main(int argc,char* argv[])
             MIS[i][j].k = k;
             if(k<j and k>i)
             {
-                if(MIS[i][k-1].value + MIS[k+1][j-1].value + 1 > MIS[i][j-1].value)
+                int temp1 = MIS[i][k-1].value + MIS[k+1][j-1].value + 1;
+                int temp2 = MIS[i][j-1].value;
+                if(temp1 > temp2)
                 {
-                    MIS[i][j].value = MIS[i][k-1].value + MIS[k+1][j-1].value + 1;                    
+                    MIS[i][j].value = temp1;                    
                 }
                 else
                 {
-                    MIS[i][j].value = MIS[i][j-1].value;
+                    MIS[i][j].value = temp2;
                     MIS[i][j].excep = true;
                 }
                 
@@ -107,7 +99,7 @@ int main(int argc,char* argv[])
             // cout<<"---------------------------"<<endl;
         }
     }
-    cout<<"complete finding MPS"<<endl;
+    // cout<<"complete finding MPS"<<endl;
     generate_result(0,number-1,MIS);
 
     fstream output_file;
@@ -115,7 +107,7 @@ int main(int argc,char* argv[])
     if(!output_file)    return 0;
     // cout<<"create file:"<<outputfile<<endl;
     output_file<<MIS[0][number-1].value<<" \n";
-    cout<<"after resulting..........."<<endl;
+    // cout<<"after resulting..........."<<endl;
     sort(result.begin(),result.end(),myobject);
     for(int i=0;i<result.size();i++)
     {
